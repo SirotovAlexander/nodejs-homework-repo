@@ -1,5 +1,8 @@
 const contactsFolder = require("../models/contactsModel");
-const addContactSchema = require("../utils/validation/contactValidationSchemas");
+const {
+  addSchema,
+  updateSchema,
+} = require("../utils/validation/contactValidationSchemas");
 
 const getAll = async (req, res) => {
   const result = await contactsFolder.find();
@@ -21,7 +24,7 @@ const getByID = async (req, res) => {
 
 const addContact = async (req, res) => {
   try {
-    const { error } = addContactSchema.validate(req.body);
+    const { error } = addSchema.validate(req.body);
     if (error) {
       throw new Error();
     }
@@ -32,7 +35,7 @@ const addContact = async (req, res) => {
   }
 };
 
-const deleteContact = async (req, res, next) => {
+const deleteContact = async (req, res) => {
   try {
     const { contactId } = req.params;
     const result = await contactsFolder.findByIdAndRemove(contactId);
@@ -45,9 +48,9 @@ const deleteContact = async (req, res, next) => {
   }
 };
 
-const updateContact = async (req, res, next) => {
+const updateContact = async (req, res) => {
   try {
-    const { error } = addContactSchema.validate(req.body);
+    const { error } = addSchema.validate(req.body);
     if (error) {
       throw new Error();
     }
@@ -61,10 +64,27 @@ const updateContact = async (req, res, next) => {
   }
 };
 
+const updateStatusContact = async (req, res) => {
+  try {
+    const { error } = updateSchema.validate(req.body);
+    if (error) {
+      throw new Error();
+    }
+    const { contactId } = req.params;
+    const result = await contactsFolder.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    });
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ message: "missing field favorite" });
+  }
+};
+
 module.exports = {
   getAll: getAll,
   getByID: getByID,
   addContact: addContact,
   deleteContact: deleteContact,
   updateContact: updateContact,
+  updateStatusContact: updateStatusContact,
 };
