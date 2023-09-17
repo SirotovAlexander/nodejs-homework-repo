@@ -1,6 +1,5 @@
 const express = require("express");
 const ctrl = require("../../controllers/contactControllers");
-const contactFunction = require("../../models/contacts");
 
 const router = express.Router();
 

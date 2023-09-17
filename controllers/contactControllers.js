@@ -1,15 +1,15 @@
-const contactFunction = require("../models/contacts");
+const contactsFolder = require("../models/contactsModel");
 const addContactSchema = require("../utils/validation/contactValidationSchemas");
 
 const getAll = async (req, res) => {
-  const result = await contactFunction.listContacts();
+  const result = await contactsFolder.find();
   res.json(result);
 };
 
 const getByID = async (req, res) => {
   try {
     const { contactId } = req.params;
-    const result = await contactFunction.getContactById(contactId);
+    const result = await contactsFolder.findById(contactId);
     if (result === null) {
       throw new Error();
     }
