@@ -25,7 +25,7 @@ const addContact = async (req, res) => {
     if (error) {
       throw new Error();
     }
-    const result = await contactFunction.addContact(req.body);
+    const result = await contactsFolder.create(req.body);
     res.status(201).json(result);
   } catch (error) {
     res.status(400).json({ message: "missing required name field" });
@@ -35,7 +35,7 @@ const addContact = async (req, res) => {
 const deleteContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const result = await contactFunction.removeContact(contactId);
+    const result = await contactsFolder.findByIdAndRemove(contactId);
     if (result === null) {
       throw new Error();
     }
@@ -52,7 +52,9 @@ const updateContact = async (req, res, next) => {
       throw new Error();
     }
     const { contactId } = req.params;
-    const result = await contactFunction.updateContact(contactId, req.body);
+    const result = await contactsFolder.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    });
     res.json(result);
   } catch (error) {
     res.status(400).json({ message: "missing fields" });
