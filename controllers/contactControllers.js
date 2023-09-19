@@ -12,11 +12,11 @@ const getAll = async (req, res) => {
 const getByID = async (req, res) => {
   try {
     const { contactId } = req.params;
-    const result = await contactsFolder.findById(contactId);
-    if (result === null) {
+    const contact = await contactsFolder.findById(contactId);
+    if (!contact) {
       throw new Error();
     }
-    res.json(result);
+    res.json(contact);
   } catch (error) {
     res.status(404).json({ message: "Not found" });
   }
