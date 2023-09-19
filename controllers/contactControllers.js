@@ -5,7 +5,7 @@ const {
 } = require("../utils/validation/contactValidationSchemas");
 
 const getAll = async (req, res) => {
-  const result = await contactsFolder.find();
+  const contacts = await contactsFolder.find();
   res.json(result);
 };
 
@@ -28,8 +28,8 @@ const addContact = async (req, res) => {
     if (error) {
       throw new Error();
     }
-    const result = await contactsFolder.create(req.body);
-    res.status(201).json(result);
+    const contact = await contactsFolder.create(req.body);
+    res.status(201).json(contact);
   } catch (error) {
     res.status(400).json({ message: "missing required name field" });
   }
@@ -38,11 +38,11 @@ const addContact = async (req, res) => {
 const deleteContact = async (req, res) => {
   try {
     const { contactId } = req.params;
-    const result = await contactsFolder.findByIdAndRemove(contactId);
-    if (result === null) {
+    const contact = await contactsFolder.findByIdAndRemove(contactId);
+    if (!contact) {
       throw new Error();
     }
-    res.json(result);
+    res.json(contact);
   } catch (error) {
     res.status(404).json({ message: "Not found" });
   }
@@ -55,10 +55,14 @@ const updateContact = async (req, res) => {
       throw new Error();
     }
     const { contactId } = req.params;
-    const result = await contactsFolder.findByIdAndUpdate(contactId, req.body, {
-      new: true,
-    });
-    res.json(result);
+    const contact = await contactsFolder.findByIdAndUpdate(
+      contactId,
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.json(contact);
   } catch (error) {
     res.status(400).json({ message: "missing fields" });
   }
@@ -71,10 +75,14 @@ const updateStatusContact = async (req, res) => {
       throw new Error();
     }
     const { contactId } = req.params;
-    const result = await contactsFolder.findByIdAndUpdate(contactId, req.body, {
-      new: true,
-    });
-    res.json(result);
+    const contact = await contactsFolder.findByIdAndUpdate(
+      contactId,
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.json(contact);
   } catch (error) {
     res.status(400).json({ message: "missing field favorite" });
   }
