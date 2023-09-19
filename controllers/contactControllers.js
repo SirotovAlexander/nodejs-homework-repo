@@ -1,6 +1,6 @@
 const contactsFolder = require("../models/contactsModel");
 const {
-  addSchema,
+  addContactValidationSchema,
   updateSchema,
 } = require("../utils/validation/contactValidationSchemas");
 
@@ -24,7 +24,7 @@ const getByID = async (req, res) => {
 
 const addContact = async (req, res) => {
   try {
-    const { error } = addSchema.validate(req.body);
+    const { error } = addContactValidationSchema.validate(req.body);
     if (error) {
       throw new Error();
     }
@@ -50,7 +50,7 @@ const deleteContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   try {
-    const { error } = addSchema.validate(req.body);
+    const { error } = addContactValidationSchema.validate(req.body);
     if (error) {
       throw new Error();
     }
