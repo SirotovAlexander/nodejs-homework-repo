@@ -6,7 +6,7 @@ const {
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
-  const user = await UsersModel.findOne({ email });
+  const user = await UsersModel.findOne(email);
 
   if (user) {
     return res.status(409).json({
