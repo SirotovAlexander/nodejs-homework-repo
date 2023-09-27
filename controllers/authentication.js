@@ -6,18 +6,30 @@ const {
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await UsersModel.findOne({ email });
 
   if (user) {
-    throw HttpError(409, "Email already in use");
+    return res.status(409).json({
+      status: "error",
+      code: 409,
+      message: "Email is already in use",
+      data: "Conflict",
+    });
   }
 
-  const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcryptjs.hash(password, 10);
 
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const newUser = await UsersModel.create({
+    ...req.body,
+    password: hashPassword,
+  });
 
   res.status(201).json({
     email: newUser.email,
     name: newUser.name,
   });
+};
+
+module.exports = {
+  register,
 };
