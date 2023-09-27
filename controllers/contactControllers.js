@@ -6,7 +6,7 @@ const {
 
 const getAll = async (req, res) => {
   const contacts = await contactsFolder.find();
-  res.json(result);
+  res.json(contacts);
 };
 
 const getByID = async (req, res) => {
