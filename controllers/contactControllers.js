@@ -28,6 +28,7 @@ const addContact = async (req, res) => {
     if (error) {
       throw new Error();
     }
+    const { _id: owner } = req.user;
     const contact = await contactsFolder.create({ ...req.body, owner });
     res.status(201).json(contact);
   } catch (error) {
