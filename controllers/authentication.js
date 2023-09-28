@@ -1,8 +1,11 @@
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const UsersModel = require("../models/usersModel");
 const {
   registerUserValidationSchema,
+  loginUserValidationSchema,
 } = require("../utils/validation/usersValidationSchemas");
+const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -28,6 +31,46 @@ const register = async (req, res) => {
   });
 };
 
+const login = async (req, res) => {
+  const { error } = loginUserValidationSchema.validate(req.body);
+  if (error) {
+    throw new Error();
+  }
+  const { email, password } = req.body;
+  const user = await UsersModel.findOne({ email });
+  if (!user) {
+    return res.status(401).json({
+      status: "error",
+      code: 401,
+      message: "Email or password invalid",
+      data: "Error",
+    });
+  }
+  const passwordCompare = await bcryptjs.compare(password, user.password);
+  if (!passwordCompare) {
+    return res.status(401).json({
+      status: "error",
+      code: 401,
+      message: "Email or password invalid",
+      data: "Error",
+    });
+  }
+  const payload = {
+    id: user._id,
+  };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(user._id, { token });
+
+  res.status(200).json({
+    token: token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
+  });
+};
+
 module.exports = {
   register,
+  login,
 };
