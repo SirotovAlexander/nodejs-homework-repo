@@ -42,7 +42,7 @@ const login = async (req, res) => {
     return res.status(401).json({
       status: "error",
       code: 401,
-      message: "Email or password invalid",
+      message: "Email or password is wrong",
       data: "Error",
     });
   }
@@ -51,7 +51,7 @@ const login = async (req, res) => {
     return res.status(401).json({
       status: "error",
       code: 401,
-      message: "Email or password invalid",
+      message: "Email or password is wrong",
       data: "Error",
     });
   }
