@@ -10,4 +10,6 @@ router.post("/register", ctrl.register);
 
 router.post("/login", ctrl.login);
 
+router.post("/logout", authenticate, ctrl.logout);
+
 module.exports = router;

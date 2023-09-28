@@ -70,7 +70,22 @@ const login = async (req, res) => {
   });
 };
 
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  const user = await UsersModel.findByIdAndUpdate(_id, { token: "" });
+  if (!user) {
+    return res.status(401).json({
+      status: "error",
+      code: 401,
+      message: "Not authorized",
+      data: "Error",
+    });
+  }
+  return res.status(204).json({ message: "Logout success" });
+};
+
 module.exports = {
   register,
   login,
+  logout,
 };
