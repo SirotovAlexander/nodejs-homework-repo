@@ -84,8 +84,18 @@ const logout = async (req, res) => {
   return res.status(204).json({ message: "Logout success" });
 };
 
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
+
+  res.status(200).json({
+    email,
+    subscription,
+  });
+};
+
 module.exports = {
   register,
   login,
   logout,
+  getCurrent,
 };
