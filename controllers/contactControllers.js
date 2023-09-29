@@ -4,8 +4,16 @@ const {
   updateSchema,
 } = require("../utils/validation/contactValidationSchemas");
 
+const {
+  paginationValidationSchema,
+} = require("../utils/validation/paginationValidationSchemas");
+
 const getAll = async (req, res) => {
-  const contacts = await contactsFolder.find();
+  const { page, limit } = req.query;
+
+  const skip = (page - 1) * limit;
+
+  const contacts = await contactsFolder.find().skip(skip).limit(limit);
   res.json(contacts);
 };
 
