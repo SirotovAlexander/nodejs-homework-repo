@@ -4,9 +4,17 @@ const {
   updateSchema,
 } = require("../utils/validation/contactValidationSchemas");
 
+const {
+  paginationValidationSchema,
+} = require("../utils/validation/paginationValidationSchemas");
+
 const getAll = async (req, res) => {
-  const contacts = await contactsFolder.find();
-  res.json(result);
+  const { page, limit } = req.query;
+
+  const skip = (page - 1) * limit;
+
+  const contacts = await contactsFolder.find().skip(skip).limit(limit);
+  res.json(contacts);
 };
 
 const getByID = async (req, res) => {
@@ -28,7 +36,8 @@ const addContact = async (req, res) => {
     if (error) {
       throw new Error();
     }
-    const contact = await contactsFolder.create(req.body);
+    const { _id: owner } = req.user;
+    const contact = await contactsFolder.create({ ...req.body, owner });
     res.status(201).json(contact);
   } catch (error) {
     res.status(400).json({ message: "missing required name field" });
