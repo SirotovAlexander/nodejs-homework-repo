@@ -1,5 +1,10 @@
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const path = require("path");
+const fs = require("fs").promises;
+
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
 const UsersModel = require("../models/usersModel");
 const {
   registerUserValidationSchema,
@@ -93,9 +98,15 @@ const getCurrent = async (req, res) => {
   });
 };
 
+// const uploadAvatar = async (req, res) => {
+//   // return avatarsDir;
+//   return avatarsDir;
+// };
+
 module.exports = {
   register,
   login,
   logout,
   getCurrent,
+  // uploadAvatar,
 };
