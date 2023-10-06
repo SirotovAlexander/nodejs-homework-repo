@@ -111,7 +111,7 @@ const changeAvatar = async (req, res) => {
 
   Jimp.read(tempUpload, (err, origin) => {
     if (err) throw err;
-    origin.resize(250, 250);
+    origin.resize(50, 50);
   });
 
   const filename = `${_id}_${originalname}`;
