@@ -12,6 +12,8 @@ const {
 } = require("../utils/validation/usersValidationSchemas");
 const { SECRET_KEY } = process.env;
 
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await UsersModel.findOne({ email });
@@ -101,8 +103,19 @@ const getCurrent = async (req, res) => {
 };
 
 const changeAvatar = async (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
+  const { _id } = req.user;
+  const { path: tempUpload, originalname } = req.file;
+  const filename = `${_id}_${originalname}`;
+  const resultUpload = path.join(avatarsDir, filename);
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", filename);
+  await UsersModel.findByIdAndUpdate(_id, { avatarURL });
+
+  res.json({
+    avatarURL,
+  });
+  // console.log(req.body);
+  // console.log(req.file);
 };
 
 module.exports = {
