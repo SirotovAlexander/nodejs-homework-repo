@@ -1,9 +1,11 @@
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const path = require("path");
-const fs = require("fs").promises;
+const gravatar = require("gravatar");
 
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+// const fs = require("fs").promises;
+
+// const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const UsersModel = require("../models/usersModel");
 const {
@@ -24,9 +26,11 @@ const register = async (req, res) => {
     });
   }
   const hashPassword = await bcryptjs.hash(password, 10);
+  const avatarURL = gravatar.url(email);
   const newUser = await UsersModel.create({
     ...req.body,
     password: hashPassword,
+    avatarURL,
   });
   res.status(201).json({
     user: {
