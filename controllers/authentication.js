@@ -3,9 +3,7 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const gravatar = require("gravatar");
 
-// const fs = require("fs").promises;
-
-// const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+const fs = require("fs").promises;
 
 const UsersModel = require("../models/usersModel");
 const {
@@ -102,15 +100,12 @@ const getCurrent = async (req, res) => {
   });
 };
 
-// const uploadAvatar = async (req, res) => {
-//   // return avatarsDir;
-//   return avatarsDir;
-// };
+const changeAvatar = async (req, res) => {};
 
 module.exports = {
   register,
   login,
   logout,
   getCurrent,
-  // uploadAvatar,
+  changeAvatar,
 };
