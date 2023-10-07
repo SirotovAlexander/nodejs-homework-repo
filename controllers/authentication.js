@@ -109,15 +109,16 @@ const changeAvatar = async (req, res) => {
 
   const { path: tempUpload, originalname } = req.file;
 
-  Jimp.read(tempUpload, (err, origin) => {
-    if (err) throw err;
-    origin.resize(50, 50);
-  });
-
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarsDir, filename);
+  const img = await Jimp.read(tempUpload);
+  await img
+    .resize(250, 250) // resize
+    .quality(60) // set JPEG quality
+    .writeAsync(tempUpload);
 
   await fs.rename(tempUpload, resultUpload);
+
   const avatarURL = path.join("avatars", filename);
   await UsersModel.findByIdAndUpdate(_id, { avatarURL });
 
