@@ -7,6 +7,8 @@ const Jimp = require("jimp");
 const fs = require("fs").promises;
 
 const UsersModel = require("../models/usersModel");
+const { transport, email } = require("../helpers/sendEmail");
+
 const {
   registerUserValidationSchema,
   loginUserValidationSchema,
@@ -34,6 +36,10 @@ const register = async (req, res) => {
     password: hashPassword,
     avatarURL,
   });
+  transport
+    .sendMail(email)
+    .then(() => console.log("Email send success"))
+    .catch((error) => console.log(error.message));
   res.status(201).json({
     user: {
       email: newUser.email,
