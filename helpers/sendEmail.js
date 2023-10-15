@@ -24,7 +24,7 @@ const email = {
 
 const sendEmail = async (payload) => {
   try {
-    const response = await transport.sendMail((to = payload), ...email);
+    const response = await transport.sendMail(to: payload, ...email);
     console.log(response);
 
     return response;
