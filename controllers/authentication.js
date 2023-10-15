@@ -2,6 +2,7 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const gravatar = require("gravatar");
+const { nanoid } = require("nanoid");
 const Jimp = require("jimp");
 
 const fs = require("fs").promises;
@@ -14,12 +15,15 @@ const {
   registerUserValidationSchema,
   loginUserValidationSchema,
 } = require("../utils/validation/usersValidationSchemas");
-const { SECRET_KEY } = process.env;
+const {
+  verifyValidationEmailSchema,
+} = require("../utils/validation/verifyValidationEmailSchema");
+const { SECRET_KEY, BASE_URL } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, subscription } = req.body;
   const user = await UsersModel.findOne({ email });
   if (user) {
     return res.status(409).json({
@@ -31,16 +35,18 @@ const register = async (req, res) => {
   }
   const hashPassword = await bcryptjs.hash(password, 10);
   const avatarURL = gravatar.url(email);
+  const verificationToken = nanoid();
   const newUser = await UsersModel.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
+    verificationToken,
   });
 
   const mail = {
     to: email,
     subject: "Verify email",
-    html: `<a target='_blank' href='https://www.meme-arsenal.com/memes/340188e1f1ae4c9292b7c614ff44176f.jpg'>Click to verify you email</a>`,
+    html: `<a target='_blank' href='${BASE_URL}/api/users/users/verify/${verificationToken}'>Click to verify you email</a>`,
   };
 
   await sendEmail(mail);
