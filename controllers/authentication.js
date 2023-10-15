@@ -7,8 +7,8 @@ const Jimp = require("jimp");
 const fs = require("fs").promises;
 
 const UsersModel = require("../models/usersModel");
-// const { transport, email } = require("../helpers/sendEmail");
-const { sendEmail } = require("../helpers/sendEmail");
+
+const sendEmail = require("../helpers/sendEmail");
 
 const {
   registerUserValidationSchema,
@@ -17,7 +17,6 @@ const {
 const { SECRET_KEY } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
-// const avatarsDir = path.join(__dirname, "../", "tmp", "avatars");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -37,11 +36,15 @@ const register = async (req, res) => {
     password: hashPassword,
     avatarURL,
   });
-  // transport
-  //   .sendMail(email)
-  //   .then(() => console.log("Email send success"))
-  //   .catch((error) => console.log(error.message));
-  sendEmail(email);
+
+  const mail = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target='_blank' href='https://www.meme-arsenal.com/memes/340188e1f1ae4c9292b7c614ff44176f.jpg'>Click to verify you email</a>`,
+  };
+
+  await sendEmail(mail);
+
   res.status(201).json({
     user: {
       email: newUser.email,

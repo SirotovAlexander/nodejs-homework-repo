@@ -15,23 +15,10 @@ const nodemailerConfig = {
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
-const email = {
-  //   to: "alexv1238@gmail.com",
-  from: "alexsirotov@meta.ua",
-  subject: "Test email",
-  html: "<p><strong>Test email</strong> from localhost:3000</p>",
+const sendEmail = async (data) => {
+  const mail = { ...data, from: "alexsirotov@meta.ua" };
+  await transport.sendMail(mail);
+  return true;
 };
 
-const sendEmail = async (payload) => {
-  try {
-    const response = await transport.sendMail(to: payload, ...email);
-    console.log(response);
-
-    return response;
-  } catch (err) {
-    throw new Error();
-  }
-};
-
-module.exports = { sendEmail };
-// module.exports = { transport, email };
+module.exports = sendEmail;
