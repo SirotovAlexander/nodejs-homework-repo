@@ -15,9 +15,7 @@ const {
   registerUserValidationSchema,
   loginUserValidationSchema,
 } = require("../utils/validation/usersValidationSchemas");
-// const {
-//   verifyValidationEmailSchema,
-// } = require("../utils/validation/verifyValidationEmailSchema");
+
 const { SECRET_KEY, BASE_URL } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
