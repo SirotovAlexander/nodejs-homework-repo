@@ -15,15 +15,15 @@ const {
   registerUserValidationSchema,
   loginUserValidationSchema,
 } = require("../utils/validation/usersValidationSchemas");
-const {
-  verifyValidationEmailSchema,
-} = require("../utils/validation/verifyValidationEmailSchema");
+// const {
+//   verifyValidationEmailSchema,
+// } = require("../utils/validation/verifyValidationEmailSchema");
 const { SECRET_KEY, BASE_URL } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
-  const { email, password, subscription } = req.body;
+  const { email, password } = req.body;
   const user = await UsersModel.findOne({ email });
   if (user) {
     return res.status(409).json({
@@ -46,7 +46,7 @@ const register = async (req, res) => {
   const mail = {
     to: email,
     subject: "Verify email",
-    html: `<a target='_blank' href='${BASE_URL}/api/users/users/verify/${verificationToken}'>Click to verify you email</a>`,
+    html: `<a target='_blank' href='${BASE_URL}/api/users/verify/${verificationToken}'>Click to verify you email</a>`,
   };
 
   await sendEmail(mail);
@@ -144,10 +144,29 @@ const changeAvatar = async (req, res) => {
   });
 };
 
+const verify = async (req, res) => {
+  const { verificationToken } = req.params;
+
+  const user = await UsersModel.findOne({ verificationToken });
+
+  if (!user) {
+    throw RequestError(404, "User not found");
+  }
+  await UsersModel.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+  });
+
+  res.status(200).json({
+    message: "Verification successful",
+  });
+};
+
 module.exports = {
   register,
   login,
   logout,
   getCurrent,
   changeAvatar,
+  verify,
 };
